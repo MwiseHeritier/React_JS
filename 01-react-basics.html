@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>React Basics</title>
+    <title>Chatbot</title>
   </head>
   <body>
     <div class="js-container"></div>
@@ -13,20 +13,14 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
-      const button = <button>Click Me!</button>;
-      const paragraph = <p>This is a paragraph {2 + 2}</p>;
-
-      const div = (
-        <div>
-          {button}
-          {paragraph}
-        </div>
-      );
+      
+      function Chatbot(){}
 
       const container = document.querySelector('.js-container');
       ReactDOM.createRoot(container).render(div);
     </script>
         
+       
         
     <!--
       REACT
@@ -94,6 +88,9 @@
       ----------------
       ->This attribute tells babel to translate all code inside the script into the normal javascript. 
     -->     
+
+  </body>
+</html>
 
   </body>
 </html>
