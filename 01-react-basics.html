@@ -14,7 +14,17 @@
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
       
-      function Chatbot(){}
+      
+      const button = <button>Hello</button>
+      const paragraph = <p>Paragraph of text {2 + 2}</p>;
+      
+
+      const div = (
+        <div>
+        {button}
+        {paragraph}
+        </div>
+      );
 
       const container = document.querySelector('.js-container');
       ReactDOM.createRoot(container).render(div);
