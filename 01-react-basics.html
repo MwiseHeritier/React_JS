@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev@8.6.4/external-library.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      const button = <button>Click Me!</button>;
+      const paragraph = <p>This is a paragraph {2 + 2}</p>;
+
+      const div = (
+        <div>
+          {button}
+          {paragraph}
+        </div>
+      );
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(div);
+    </script>
+        
+        
+    <!--
+      REACT
+      -----
+      -> Def: React is external library that help us create website easier.
+      -> it's a bunch of code that is outside our computer.
+      -> We can load this code on our website, and use it.
+      -> When using React, we use JSX instead of normal JavaScript.
+      ->  Using React we can actually use our own HTML element and we use our own 
+      HTML element to build a website.
+      -> In React, we should not modify the data directly. we should always create 
+      a copy and then modify that copy, this helps React to be more efficient
+      -> Do not use the DOM manually bcz React is managing the website, if we use DOM 
+      manually it might interfere with React Instead we should use React features to get 
+      the text from a textbox.
+
+
+      Why are there 2 external libraries for React?
+      ---------------------------------------------
+      -> React can be used in different places like Websites and Mobile apps.
+      -> Creators of react decided to devided into 3 external libraries these are:
+      1. React = shared features(used in both websites and mobile apps)
+      2. ReactDOM = features specific to websites(using React to create websites ).
+      3. ReactNative = using React to create mobile apps.
+
+      -> ReactDOM.createRoot() = sets up React.
+      -> .render() = display something inside the container
+      
+      container
+      ---------
+      -> This element act as the container.
+      -> Everything we create with react is going to be displayed in  container.
+      -> the reason Reacts uses this is because it keep things orgnized, everything in this
+      container is going to be controlled by React and will not affect other elements outside.
+      
+      BABEL EXTERNAL LIBRARY
+      ----------------------
+      ->Def: Babel is a JavaScript compiler — it takes modern JavaScript (ES6, ES7, JSX, etc.) 
+      and converts it into an older version  of JavaScript(normal JavaScript) that browsers can understand.
+      ->Babel is an external JavaScript library that compiles modern JavaScript (and JSX)
+      into browser-compatible JavaScript.
+
+      -> Translates other languages into JS.
+      -> We use Babel in React because web browsers cannot understand JSX and certain modern JavaScript
+      features. Babel transforms this modern syntax (ES6+ and JSX) into an older, browser-compatible 
+      version of JavaScript so that our React applications can run smoothly across all browsers.
+
+      JSX
+      ---
+      -> means Javascript XML
+      -> Same as Javascript, but we can write HTML directly in our Jascript code.
+      -> Let us find errors easier when we are coding.
+      -> We can insert values inside JSX elements.
+      -> Creating a website with React feels natural it is simpe than how we  create DOM feature in JS.
+      ->JSX is more strict than normal HTML , all element need a closing tag.
+      
+      Adventages of JSX
+      -------------------
+      -> Easier to write and understand.
+      -> Easier to find errors when coding.
+      -> We can insert values inside JSX elements.
+      -> Creating a website with React feels natural it is simpe than how we  create DOM feature in JS.
+
+      type='text/babel'
+      ----------------
+      ->This attribute tells babel to translate all code inside the script into the normal javascript. 
+    -->     
+
+  </body>
+</html>
