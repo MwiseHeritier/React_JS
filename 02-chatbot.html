@@ -10,19 +10,105 @@
 
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
       
-      function ChatInput(){
+      
+      function ChatInput({ chatMessages, setChatMessages }){
+
+        //here we want to save this text, so we can use it later when creating chatMessages, so we need to use
+        //  state to save it because state is used to save data in react and it saves data changes over time
+        
+        const [inputText, setInputText] = React.useState('');
+        const [isLoading, setIsLoading] = React.useState(false);
+        //const array = React.useState('');
+        //const inputText = array[0];
+        //const setInputText = array[1];
+
+        function saveInputText(event){
+          setInputText(event.target.value)
+        }
+
+        async function sendMessage(){
+          if(isLoading || inputText === ''){
+            return;
+          }
+
+          // Set isLoading to true at the start, and set it to
+          // false after everything is done.
+          setIsLoading(true);
+
+          //  Create a new array that includes all old messages plus the new user message
+          const newChatMessages = [
+            ...chatMessages,
+            {
+              message: inputText,
+              sender: 'user',
+              id: crypto.randomUUID()
+            },
+
+             // Another solution is to add the Loading... message
+            // to newChatMessages, but we have to remove it later.
+
+            {
+              message: 'Loading...',
+              sender: 'robot',
+              id: crypto.randomUUID()
+            }
+
+          ]
+          //  Update the screen to show the user’s message
+          setChatMessages(newChatMessages);
+           setInputText('');//clear inputText after sending message
+          
+          //  Wait for the chatbot’s response (async operation)
+          const response =  await Chatbot.getResponseAsync(inputText);
+
+          // After the chatbot responds, add that new message to the list
+          setChatMessages([
+            // This makes a copy of newChatMessages, but without the
+            // last message in the array.
+            ...newChatMessages.slice(0, newChatMessages.length - 1),
+            
+            {
+              message: response,
+              sender: 'robot',
+              id: crypto.randomUUID()
+            }
+          ]);
+
+          // Set isLoading to false after everything is done.
+          setIsLoading(false);
+        
+
+         
+        }
+
+        function handleKeyDown(event){
+          if(event.key === 'Enter'){
+            sendMessage();
+          }
+          else if(event.key === 'Escape'){
+            setInputText('');
+          }
+        }
+
         return(
           <>
             <input 
               placeholder="send a message to chatbot" 
-              size= "30" 
+              onKeyDown={handleKeyDown}
+              size= "30" onChange={saveInputText}
+              value ={inputText}
             />
-            <button>Send</button>
+            <button 
+            onClick={sendMessage}
+            >Send</button>
           </>
+
         );
       }
 
@@ -58,30 +144,66 @@
           </div>
         );
       }
+
+      function ChatMessages({ chatMessages}){
+        
+        return(
+            
+          <>
+              
+            {chatMessages.map((chatMessage) =>{
+              return(
+                <ChatMessage 
+                  message= {chatMessage.message} 
+                  sender= {chatMessage.sender}
+                  key= {chatMessage.id}
+                />
+              );  
+            })}
+          </>
+        );
+      }
+
       
       function App(){
+
+        const [chatMessages, setChatMessages] =  React.useState([
+
+          {
+            message: 'hello chatbot',
+            sender: 'user',
+            id: 'id1'
+          },
+          {
+            message: 'Hello! How can I help you?',
+            sender: 'robot',
+            id: 'id2'
+          },
+          {
+            message: 'can you get me today\'s date?',
+            sender: 'user',
+            id: 'id3'
+          },
+          {
+            message: 'Today\'s date is 30 september',
+            sender: 'robot',
+            id: 'id4'
+          }
+        ]);
+        //const [chatMessages, setChatMessages] = array;
+        //const chatMessages = array[0];
+        //const setChatMessages = array[1];
+        
         return(
           <>
-            <ChatInput />
-            <ChatMessage 
-              message= "hello chatbot" 
-              sender="user"
+            <ChatInput 
+              chatMessages={chatMessages} 
+              setChatMessages={setChatMessages} 
             />
-
-            <ChatMessage 
-              message= "Hello! How can I help you?" 
-              sender="robot"
-            />
-
-            <ChatMessage 
-              message= "can you get me today's date?" 
-              sender="user"
-            />
-
-            <ChatMessage 
-              message = "Today's date is 30 september" 
-              sender="robot"
-            />
+            <ChatMessages 
+              chatMessages={chatMessages} 
+            />  
+            
           </>
         );
       }
