@@ -2,12 +2,93 @@
 <html>
   <head>
     <title>Chatbot</title>
+    <style>
+      body{
+        font-family: Arial;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        
+      }
+
+      .send-button{
+        background-color: rgb(25, 135, 84);
+        color: white;
+        padding: 12px 20px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      .chat-input{
+        padding: 12px 15px;
+        border-radius: 10px;
+        border-width: 1px;
+        font-size: 15px;
+        flex-grow: 1; /* makes input take all available space in container */
+        
+        
+      }
+      .chat-input-container{
+        display: flex;
+        margin-bottom: 60px;
+      }
+      .app-container{
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        
+      }
+      .chat-message-user{
+        display: flex;
+        justify-content: end;
+        align-items: start;
+      }
+      .chat-message-robot{
+        display: flex;
+        align-items: start;
+        
+      }
+      .chat-message-text{
+        background-color: rgb(238, 238, 238);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 20px;
+        max-width: 300px;
+      }
+
+      .chat-message-profile{
+        width: 45px;
+      }
+
+      .chat-messages-container{
+        flex-grow: 1;
+        margin-top: 20px;
+        overflow: scroll;
+        scrollbar-width: none; /
+      }
+
+      .welcome-message {
+        color: rgb(120, 120, 120);
+        text-align: center;
+      }
+      .loading-spinner {
+        height: 40px;
+        margin: -15px;
+      }
+
+    </style>
   </head>
   <body>
     <div class="js-container"></div>
 
-    <script src="https://unpkg.com/supersimpledev@8.6.4/external-library.js"></script>
-
+    
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
     
@@ -33,6 +114,7 @@
         }
 
         async function sendMessage(){
+          // disable the send button when the we are in loading state and when input is empty
           if(isLoading || inputText === ''){
             return;
           }
@@ -54,7 +136,7 @@
             // to newChatMessages, but we have to remove it later.
 
             {
-              message: 'Loading...',
+              message:  <img src="loading-spinner.gif" className="loading-spinner" />,
               sender: 'robot',
               id: crypto.randomUUID()
             }
@@ -97,17 +179,19 @@
         }
 
         return(
-          <>
+          <div className= "chat-input-container">
             <input 
               placeholder="send a message to chatbot" 
               onKeyDown={handleKeyDown}
               size= "30" onChange={saveInputText}
               value ={inputText}
+              className= "chat-input"
             />
             <button 
-            onClick={sendMessage}
+              onClick={sendMessage}
+              className = "send-button"
             >Send</button>
-          </>
+          </div>
 
         );
       }
@@ -131,25 +215,41 @@
         */
 
         return(
-          <div>
+        <div className={
+          sender === 
+            'user' 
+            ? 'chat-message-user' : 
+            'chat-message-robot'
+        }>
             {sender === 'robot' && (
-              <img src= "robot.png" width= "50"/>
+              <img src= "robot.png"
+              className="chat-message-profile"/>
             )}
-
-            {message}
+            <div
+            className= "chat-message-text">
+              {message}
+            </div>
 
             {sender === 'user' && (
-              <img src= "user.png" width= "50"/>
+              <img src= "user.png" 
+              className="chat-message-profile"/>
             )}
           </div>
         );
       }
 
       function ChatMessages({ chatMessages}){
-        
+        const chatMessagesRef = React.useRef(null); // to get access to the div element
+        React.useEffect(()=>{
+          const containerElem = chatMessagesRef.current;
+          if(containerElem){
+            containerElem.scrollTop = containerElem.scrollHeight;
+          }
+        }, [chatMessages]);
         return(
             
-          <>
+          <div className= "chat-messages-container"
+          ref={chatMessagesRef}>
               
             {chatMessages.map((chatMessage) =>{
               return(
@@ -160,51 +260,35 @@
                 />
               );  
             })}
-          </>
+          </div>
         );
       }
 
       
       function App(){
 
-        const [chatMessages, setChatMessages] =  React.useState([
-
-          {
-            message: 'hello chatbot',
-            sender: 'user',
-            id: 'id1'
-          },
-          {
-            message: 'Hello! How can I help you?',
-            sender: 'robot',
-            id: 'id2'
-          },
-          {
-            message: 'can you get me today\'s date?',
-            sender: 'user',
-            id: 'id3'
-          },
-          {
-            message: 'Today\'s date is 30 september',
-            sender: 'robot',
-            id: 'id4'
-          }
-        ]);
+        const [chatMessages, setChatMessages] =  React.useState([]);
         //const [chatMessages, setChatMessages] = array;
         //const chatMessages = array[0];
         //const setChatMessages = array[1];
         
         return(
-          <>
+          <div className= "app-container">
+          {chatMessages.length === 0 && (
+            <p className="welcome-message">
+              Welcome to the chatbot project! Send a message using the textbox below.
+            </p>
+          )}
+
+            
+            <ChatMessages 
+              chatMessages={chatMessages} 
+            />
             <ChatInput 
               chatMessages={chatMessages} 
               setChatMessages={setChatMessages} 
             />
-            <ChatMessages 
-              chatMessages={chatMessages} 
-            />  
-            
-          </>
+          </div>
         );
       }
 
@@ -214,8 +298,262 @@
       ReactDOM.createRoot(container).render(<App />);
     </script>
         
-       
-        
+    
+
+
+    <!--
+  Components
+  ----------
+  -> def: is a reusable, self-contained piece of UI that can have its own
+  structure (HTML/JSX), styling (CSS), and behavior (JavaScript logic).
+  -> A component name must start with a capital letter(PascalCase)
+  -> It is the piece of website.
+  -> It helps a developer to split up the website into pieces which is better practice.
+  so a developer can work on a small piece of the website at a time.
+  -> Every component function gets one parameter called 'props'.
+  -> This props parameter is an object and it contains all attributes we give to component.
+  -> We can use props to access our attributes.
+  -> We use props to reuse components.
+  -> most of the time we use a function when creating(naming) React components.
+ 
+  Example
+  -------
+  function Header() {
+    return <h1>My Website</h1>;
+  }
+
+  function App() {
+    return (
+      <div>
+        <Header />
+        <p>Welcome to my site!</p>
+      </div>
+    );
+  }
+
+  
+  Key Features of Components
+  ------------------------
+  
+  Reusable → Use the same component in multiple places.
+  Isolated → Changes inside one component don’t break others.
+  Composable → Combine small components into bigger ones.
+  Props → Components can receive data from their parent.
+  State → Components can store and update their own data
+
+  Note:  Function in JSX we return only one values/element.
+  But we can use div to group more element
+
+  -> <ChatInput></ChatInput> is called component syntax(it is a react special
+  syntax used to insert a component)
+
+  -> Size attribute means how many characters can fit in this <input>
+   
+  Props
+  -----
+  -> Props is short for properties.
+  -> Taken as an object parameter in the component function.
+  -> Contains all attributes we give to component.
+  -> We can use props to access our attributes.
+  -> Makes components reusable.
+
+  Fragment(<></>)
+  ---------------
+  -> Is another way of grouping element together in React, without creating an extra <div>
+  
+
+  Guard operator (&&)
+  ------------------
+  ->It’s a shorter alternative to if statements or ternary operators when you only need to 
+  show something in one case
+  -> If value1 is true, the result will be value2 (ex: const result = value1 && value2);
+  -> We can use && as an if-statement in our JSX.
+
+  Array.map()
+  ---------------
+  ->.map() takes each object in the array and save it in chatMessage parameter, then runs
+  the function and return/convert a new value.
+  -> In this example we convert each chatMessage object into a ChatMessage component because we want to display it in the UI.
+  -> We use map when we want to display a list of things in the UI.
+  -> 'sender= chatMessage.sender' we are giving the sender property of chatMessage object to sender attribute of ChatMessage component or
+     this will get sender property out of each chatMessage object and save it in sender attribute.
+  -> 'key= chatMessage.id' is the unique identifier for each ChatMessage component.
+  -> React needs this key to track each component in the array and it should be unique.
+
+  NOTE
+  -----
+  ->Key helps React to track changes in the array and it should be unique.
+  -> Destructuring is a JavaScript feature that lets you extract data from objects or arrays and 
+  assign it to variables in a concise way
+
+  EVENT HANDLERS
+  --------------
+  -> An event handler is simply a function that runs in response to an event — like a button click, 
+  text input change, or form submission.
+  -> It does something when an event happens.
+  -> For example "onclick={sendMessage}" onclick is event whicle sendMessage is an event handler
+  -> We shouldn't use bracket '()' on event handler
+  ->Run a function when we interact with the website
+
+  crypto.randomUUID()
+  ------------------
+  -> is a JavaScript built-in method that generates a universally unique identifier
+  (UUID) string in the format:
+
+  -> We use this in sendMessage function  inorder , everytime we click button it will create 
+  the unique id because if we use our own id the sendMessage function will create the same id when we click the button.
+ 
+  N.B
+  ----
+  ->The reason why we use useState is because the chatMessages array is just a normal variable. if we the chatMessages array
+  is updated React will not know that it is updated and it will not update the HTML.That is why we use useState in order to make React
+  know that the chatMessages array is updated and it will update the HTML.
+
+  STATE
+  -----
+  -> Data that is connected to the HTML.
+  -> Save data that changes over time.
+  -> When we update this data, it will update the HTML.
+  -> is a built-in object that stores data or information about 
+  a component that can change over time.
+  ->When state changes, React automatically re-renders the component 
+  to reflect the new data in the UI.
+  -> Convert some data into state we use 'React.useState()'
+  ->React.useState returns/gives an array.
+  -> That array has two values, the first value is array[0] is called current data and the second value is array[1] is called updater function.
+  -> in this example the first array will give us the current state value of chatMessages(current data);
+  -> The second value/ element is the function(updater function) to update the current state value and this function tells React that the data changed.
+  -> The way updater function works it replaces the entire state values array with a new array
+  -> -> In React, we should not modify the data directly. we should always create 
+  a copy and then modify that copy, this helps React to be more efficient
+
+  Spread Operator(...)
+  --------------------
+  -> It takes the values in an array and copies them into a new array.
+ 
+
+  onChange attribute 
+  ---------------
+  -> is an event handler used to detect and respond when the value of a form element changes.
+  -> fires when the input loses focus after a change.
+  -> Runs a function when we change the text inside an <input>
+  -> fires every time the value changes (while typing, selecting, or checking).
+  -> You provide it a function (event handler) to run whenever the change happens.
+  -> Every time we change the text inside the input it will run that function
+  -> When onChange runs the function  inside it, It gonnna give this function one parameter.
+    Because React (and the browser) wants to give you information about what changed.
+  -> That parameter is called 'event'.
+  -> Event is an object and it contains details about event or change.
+  -> one detail is called event.target.
+  -> event.target give us the element/input that we are typing in or that we change.
+  ->event.target.value it give us text inside input or other elements. 
+  -> We can use state to save that text bcz state save data that changes over time.
+
+  How "setInputText(event.target.value)" works
+  --------------------------------------------
+  -> “Hey, update inputText to this new value.”
+  -> React will re-render the component with the updated text.
+  
+  Lifting the State Up
+  -------------------
+  -> means moving a state variable from a child component into a common parent component, 
+  so that multiple child components can share and stay in sync with the same data.
+  
+  -> From this example we want to share chatMessages and setChatMessages states between ChatInput 
+  and ChatMessage component so we will put it in common component called 'App'
+
+  Why Do We Lift State Up?
+  ------------------------
+  ->If two or more components need to use or update the same data:
+  1.Keeping that state in each child separately can cause inconsistencies.
+  2.Instead, we store the state in their closest common ancestor and pass it down as props.
+
+  Controlled input
+  ----------------
+  -> is an input form element (like <input>, <textarea>, or <select>) whose value is controlled by React state.
+  -> For this example using the value prop we can controll the text inside the textbox using our code.
+
+  HOOKS
+  -----
+  -> Hooks are functions that add state, effects, refs, and more to functional components.
+  -> Let us insert React features into our component.
+  -> Hooks are useState, useEffect, useContext, useRef, useReducer, useMemo, useCallback,
+  useLayoutEffect.
+  -> Always put hooks at the top of the component.
+  -> Hooks should not be inside anything like if statements, nor function. 
+
+  useEffect()
+  ----------
+  -> Run some code after the component is created or updated.
+  ->like in this project, after adding a new message we want to run some code to scroll to the bottom
+  -> In our project, after we add a chat message we want to run some code to scroll to the bottom that is
+  why we used useEffect().
+  ->useEffect() has two parameters those are: function to run if some thing is changed and array which controls
+  when useEffect runs.
+  -> If we give it an empty array, useEffect will only run once after component is created.
+  ->UseEffect has two parameters first one is the function to run another is the Dependency array 
+  ->[chatMessages] = run this function(first parameter) every time chatMessages changes.
+  -> [chatMessages] is called 'Dependency array' it lets control when useEffect runs.it means this effect will
+ re-run every time the chatMessages state changes (i.e., whenever a new message is added).
+ 
+  Without dependency array
+  ------------------------
+  ->The function runs after every render (every time the component updates or re-renders).
+
+  With an empty array []
+  -------------------
+  -> The function runs only once, when the component is first created (mounted).
+
+  With variables [x, y]
+  -------------------
+  -> The function runs when any of those variables change (for example, when x or y updates). 
+
+
+  useRef()
+  -------
+  ->Let us automatically save an HTML element from the component.
+  -> A ref is container with special React features, one special feature is we can give this container to React and React can automatically
+  save an HTML element inside this container/ Ref.
+  
+  Note: After the chat messages changes we want to automatically scroll to the bottom.To scroll to the bottom first we need to get the
+  HTML element  that we want to scroll into our JS. in normal JS, to get HTML element we used DOM. But  in React we don't use DOM manually,
+  inst
+   
+  React will save this HTML element and save it inside 'chatMessageRef'. To access the HTML element saved inside the ref, we will write 
+  chatMessageRef.current
+  
+  steps to use useRef
+  --------------------  
+  1. Create a ref using React.useRef().
+  2. Attach/ give  the ref to the HTML element using the ref attribute. 
+  3. Access the HTML element using chatMessagesRef.current inside useEffect function.
+  4. Use the HTML element to do something (like scroll to the bottom).
+
+  const chatMessagesRef = React.useRef(null);
+  -------------------------------------------
+  ->React.useRef(null) creates a ref object.
+  ->Initially, current is null because no HTML element is assigned yet.
+   
+  div className="chat-messages-container" ref={chatMessagesRef}>
+  -------------------------------------------------------------
+  -> chatMessagesRef is a ref object created with React.useRef(null).
+  -> The ref prop tells React: “Hey, put this actual DOM element (<div>) into chatMessagesRef.current.”
+  
+  chatMessagesRef.current
+  -----------------------
+  ->will hold the HTML <div> element, not the individual chat messages.
+  -> So it doesn’t store the chat messages themselves—it stores the container
+   that holds the messages. You use this, for example, to scroll to the bottom 
+   of the chat container automatically after adding a new message.
+
+  Note: The reason we put chatMessagesRef.current inside useEffect is bcz useEffect runs after the component is created. So we need to wait 
+  for the component to be created/updated first and then we can access chat-messages-container later inside useEffect.
+  
+  containerElem.scrollTop = containerElem.scrollHeight;
+  ----------------------------------------------------
+  ->scrollTop means how far from top should we scroll? and scrollHeight gives us the total height of the element
+  -> So when you set scrollTop equal to scrollHeight, the container jumps to the bottom
+---
    
     
       
