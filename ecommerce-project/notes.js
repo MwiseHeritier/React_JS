@@ -67,5 +67,16 @@
 
     export default App;
 
+    <Link>
+    -----
+    -> is a React Router component used to navigate between pages in a Single 
+    Page Application (SPA) without reloading the page.
+    -> It replaces <a> atttribute in Routing
+    -> we first import it in the file
+    -> It has prop 'to' attribute it replaces 'href' in normal HTML.
+
+    NOTE: We put header component in the 'The components folder' because it shared in multiple components.
+
+ 
 
 */
