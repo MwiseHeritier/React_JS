@@ -76,7 +76,14 @@
     -> It has prop 'to' attribute it replaces 'href' in normal HTML.
 
     NOTE: We put header component in the 'The components folder' because it shared in multiple components.
+   
 
- 
+    <NavLink />
+    -----------
+    -> <NavLink /> is a special version of <Link /> from react-router-dom.
+    -> It automatically applies a CSS class when the link matches the current URL.
+    -> This is super useful for highlighting active navigation items (like in menus or headers)
+    ->By default, <NavLink> adds a class called active to the link when it matches the current route.
+    for example: if you are on the orders page, it adds class to Orders link.
 
 */
