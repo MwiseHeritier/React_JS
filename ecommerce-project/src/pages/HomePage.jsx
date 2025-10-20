@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Header } from '../components/Header';
 import { products } from '../../starting-code/data/products';
 
@@ -5,11 +6,9 @@ import CheckmarkIcon from '../assets/images/icons/checkmark.png';
 import './HomePage.css'
 
 export function HomePage() {
-	fetch('http://localhost:3000/api/products')
+	axios.get('http://localhost:3000/api/products')
 		.then((response) =>{
-			return	response.json()
-		}).then((data) =>{
-			console.log(data)
+		 console.log(response.data);
 			
 		});
 
@@ -168,6 +167,17 @@ output
 3️⃣ Data is ready: [ ... ]
 
 
+Axios
+----
+-> Is npm package used to make requests from the backend
+-> Is the cleaner way than fetching
+-> to install it we use 'npm install axios@{latest version}
+-> After we run it using 'npm run dev'
+-> We first import it in the code editor using 'import axios from 'axios'
+
+
+NOTE: the difference between 'axios.get()' and 'fetch()' . For axios.get() the
+data from the backend will be save directly inside the response.
 
 */
 }
