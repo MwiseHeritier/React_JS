@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { formatMoney } from '../utils/money';
 import { Header } from '../components/Header';
 
 
@@ -49,7 +50,7 @@ export function HomePage({ cart }) {
 								</div>
 
 								<div className="product-price">
-									${(product.priceCents / 100).toFixed(2)}
+									{formatMoney(product.priceCents)}
 								</div>
 
 								<div className="product-quantity-container">
@@ -212,5 +213,12 @@ server: {
 }
 
 This means URL path starts with '/api ' the request will automaticall go to target'
+
+key property
+------------
+->Unique identifier for each item in a list
+->Helps React track which items changed, added, or removed
+-> We use key, if something changes (like adding, deleting, or reordering products), 
+React must figure out which items changed so it can update only those, not the whole list.
 */
 }

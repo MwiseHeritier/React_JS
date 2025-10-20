@@ -13,7 +13,7 @@ function App() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/cart-items')
+    axios.get('/api/cart-items?expand=product')
       .then((response) => {
         setCart(response.data);
       });
@@ -39,5 +39,14 @@ export default App
  path="*"
  -------
  -> this matches to any URL path
+
+ '/api/cart-items?expand=product'
+ -------------------------------
+ '?expand=product'
+ ----------------
+ -> This is called  Querry parameter
+ ->Let us add additional information to our request.
+ -> When the backend receives this Querry parameter it will
+ automatically add product details tothe cart.
 
  */
