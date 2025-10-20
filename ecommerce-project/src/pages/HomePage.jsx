@@ -72,4 +72,45 @@ export function HomePage() {
 			</div>
 		</>
 	);
+
+/*
+
+Backend
+-------
+-> The process of starting the backend is very similar to
+react frontend we use 'npm install' to install all packages. 
+
+Use of Backend in This Project
+------------------------------
+
+→ Used to store product data:
+-------------------------------
+Our e-commerce website may have thousands of products, so it doesn’t make sense
+to save everything on a user’s or developer’s computer — local storage would quickly
+run out of space. Instead, companies use dedicated servers or data centers (the backend)
+to store all product information securely. When users visit the website, the frontend
+requests product data from the backend and displays it.
+
+Used to save the shopping cart:
+-------------------------------
+Saving the cart on the user's computer would limit access to that specific device only.
+If the same user logs in from a different computer or phone, their cart would be lost.
+To solve this, the backend stores cart data on the server, allowing users to access
+their saved cart from any device.
+
+
+-> The user’s cart is stored in the database. Even if they log in from a different computer or phone,
+the backend retrieves their saved cart.
+
+-> Example: You add a phone and a charger to your cart on your laptop.
+Later, you open the same website on your phone → you still see your saved items because they’re stored in the backend.
+
+→ Used to share and synchronize data between computers:
+------------------------------------------------------
+The backend acts as a central communication point for all users and devices.
+It ensures that everyone accessing the website sees the same updated data —
+such as available products, prices, and stock levels. This makes it possible
+for many users to use the website simultaneously while staying synchronized
+with the same database.
+*/
 }
