@@ -1,16 +1,22 @@
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { Header } from '../components/Header';
-import { products } from '../../starting-code/data/products';
+
 
 import CheckmarkIcon from '../assets/images/icons/checkmark.png';
 import './HomePage.css'
 
 export function HomePage() {
-	axios.get('http://localhost:3000/api/products')
-		.then((response) =>{
-		 console.log(response.data);
+	const[products, setProducts] = useState([]);
+
+	useEffect(() =>{
+		axios.get('http://localhost:3000/api/products')
+			.then((response) =>{
+			setProducts(response.data);
 			
-		});
+			});
+	}, []);
+	
 
 	return (
 		<>
@@ -176,8 +182,20 @@ Axios
 -> We first import it in the code editor using 'import axios from 'axios'
 
 
-NOTE: the difference between 'axios.get()' and 'fetch()' . For axios.get() the
-data from the backend will be save directly inside the response.
+N.B:
+----
+We use **`useEffect`** because if we don’t, the `axios.get()` function would
+run **every time** the `HomePage` component re-renders — sending multiple unnecessary 
+requests to the backend.By using `useEffect` with an **empty dependency array `[]`**, 
+we make sure that `axios.get()` runs **only once**, when the `HomePage` component is first created (mounted).
 
+If you notice `useEffect` running **twice** in the console, it’s because **React Strict Mode** is enabled.
+Strict Mode intentionally runs certain functions (including `useEffect`) twice in development mode to help detect potential bugs.
+This only happens in development — it won’t happen in the production build.
+
+->We use useState to save the data of products. And then we can generate HTML of each product 
+->saves the fetched products into your state so you can display them.
+-> setProducts(response.data); this will saves the fetched/products data into products and use 'products' variable
+to generate HTML
 */
 }
