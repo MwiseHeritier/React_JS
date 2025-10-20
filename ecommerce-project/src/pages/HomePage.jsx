@@ -5,6 +5,14 @@ import CheckmarkIcon from '../assets/images/icons/checkmark.png';
 import './HomePage.css'
 
 export function HomePage() {
+	fetch('http://localhost:3000/api/products')
+		.then((response) =>{
+			return	response.json()
+		}).then((data) =>{
+			console.log(data)
+			
+		});
+
 	return (
 		<>
 
@@ -112,5 +120,54 @@ It ensures that everyone accessing the website sees the same updated data —
 such as available products, prices, and stock levels. This makes it possible
 for many users to use the website simultaneously while staying synchronized
 with the same database.
+
+Data Fetching
+-------------
+-> Means get data from the backend using our codes.
+
+fetch()
+------
+-> is a built-in JavaScript function used to communicate with the backend (server)
+->It allows your frontend (e.g., your website) to send requests to the backend and get responses — usually in JSON format.
+-> We can't save data in a variable (like this: const products = fetch('http://localhost:3000/api/products') ) bcz when 
+we contact with the backend it takes time for this code to reach the backend and to get a response.
+
+->fetch() is asynchronous code means codes that does not finish immediately(right away)
+-> fetch() returns a promise , promise let us wait for asynchronous code to finish.
+-> A promise has a method called '.then()'
+-> .then() is a callback function that executes only after the Promise (like fetch()) successfully receives a response from the backend.
+-> fetch() gives you the whole response, which contains headers, status, and body. response.json() specifically extracts/ gets the body 
+(the data sent by the backend) and parses it into a real JavaScript object or array that you can use in your code
+
+-> without response.json(), the data is just text; with it, you get usable JS objects ready for display, manipulation, or processing.
+(like data[0].name  /data[0].price).
+
+-> response.json() → returns a new Promise because It reads the response body stream asynchronously, It parses the JSON into a JS object,
+Once done, the Promise resolves with the parsed data.
+
+Example
+--------
+console.log("1️⃣ Sending request...");
+
+fetch('https://api.myecommerce.com/products')
+  .then(response => {
+    console.log("2️⃣ Response arrived!");
+    return response.json();
+  })
+  .then(data => {
+    console.log("3️⃣ Data is ready:", data);
+  });
+
+console.log("4️⃣ Code keeps running...");
+
+output
+-----
+1️⃣ Sending request...
+4️⃣ Code keeps running...
+2️⃣ Response arrived!
+3️⃣ Data is ready: [ ... ]
+
+
+
 */
 }
